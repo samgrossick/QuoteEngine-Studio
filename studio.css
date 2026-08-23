@@ -13,7 +13,10 @@
 .studio-masthead { border-bottom: 1px solid var(--ink); }
 .studio-masthead-inner { width: min(1320px, calc(100% - 48px)); min-height: 88px; margin: 0 auto; display: flex; align-items: center; justify-content: space-between; gap: 32px; }
 .studio-brand { padding: 0; display: inline-flex; align-items: center; gap: 13px; text-align: left; background: none; border: 0; }
-.studio-mark { width: 50px; height: 50px; display: grid; place-items: center; color: var(--lime); background: var(--green); border: 2px solid var(--ink); box-shadow: 4px 4px 0 var(--lime); font: 900 15px/1 var(--headline); letter-spacing: .06em; transform: rotate(-1deg); }
+.studio-mark { width: 46px; height: 46px; flex: none; display: block; }
+.studio-mark svg { width: 100%; height: 100%; display: block; }
+.studio-mark-plate { fill: var(--lime); }
+.studio-mark-glyph { fill: var(--dark); }
 .studio-brand-copy { display: grid; gap: 3px; }
 .studio-brand-copy strong { font: 900 24px/.9 var(--headline); letter-spacing: .02em; text-transform: uppercase; }
 .studio-brand-copy small { color: var(--muted); font: 650 9px/1 var(--mono); letter-spacing: .1em; text-transform: uppercase; }
@@ -22,8 +25,20 @@
 .studio-nav button:last-child { border-right: 1px solid var(--line); }
 .studio-nav button:hover { color: white; background: var(--green); }
 .studio-nav button.active { color: var(--ink); background: var(--lime); }
-.studio-footer { width: min(1320px, calc(100% - 48px)); margin: 56px auto 0; padding: 20px 0 34px; display: flex; align-items: center; justify-content: space-between; gap: 20px; flex-wrap: wrap; border-top: 1px solid var(--line); color: var(--muted); font: 650 9px/1.5 var(--mono); letter-spacing: .06em; text-transform: uppercase; }
+/* engine.css styles the bare `footer` element as QuoteEngine's own site
+   footer: a three-column grid with paper fill and viewport-scaled padding.
+   This is a <footer> too, so those have to be undone explicitly, not just
+   layered over. That inherited grid is what made this look broken.
+   Full-bleed rule, measured content — the masthead's structure, so the two
+   ends of the page line up instead of the footer stopping short. */
+.studio-footer { display: block; min-height: 0; margin-top: 56px; padding: 0; color: var(--muted); background: none; border-top: 1px solid var(--line); font: 650 9px/1.5 var(--mono); letter-spacing: .06em; text-transform: uppercase; }
+.studio-footer-inner { width: min(1320px, calc(100% - 48px)); margin: 0 auto; padding: 20px 0 34px; display: flex; align-items: center; justify-content: space-between; gap: 20px; flex-wrap: wrap; }
 .studio-footer .text-link { background: none; border: 0; padding: 0; color: var(--green); font: inherit; text-decoration: underline; }
+
+/* Keeps the footer at the bottom of short pages rather than floating mid-screen.
+   The column is on the mount point, since that is what wraps the three regions. */
+#studio { min-height: 100vh; display: flex; flex-direction: column; }
+#studio > main { flex: 1; }
 
 /* About ------------------------------------------------------------------- */
 .about-body h2 { margin: 34px 0 10px; font: 900 20px/1.1 var(--headline); letter-spacing: .02em; text-transform: uppercase; }
@@ -100,3 +115,92 @@
 .transcript-empty p { margin: 0; color: var(--muted); font-size: 14px; line-height: 1.55; }
 .local-tracks button.active { color: white; background: var(--green); border-color: var(--green); }
 .local-studio-heading .local-choice { flex-wrap: nowrap; }
+
+/* Dark chrome ==============================================================
+ *
+ * `engine.css` was written for a light, warm archive: bright fills carry white
+ * text, panels are paper, and one rule even sets `background: white` under
+ * `color: var(--ink)`. Inverting the tokens alone would leave text sitting on
+ * its own colour, so the rules that assumed light chrome are corrected here
+ * rather than in the vendored stylesheet, which stays a clean copy.
+ */
+:root {
+  /* Native controls, scrollbars and range tracks follow this. */
+  color-scheme: dark;
+
+  --ink: #e7eaf0;
+  --cream: #0f1216;
+  --paper: #171b22;
+  --green: #5aa9ff;
+  --lime: #ffc247;
+  --orange: #ff7a5c;
+  --line: rgba(231, 234, 240, 0.14);
+  --dark: #0b0d11;
+  --muted: rgba(231, 234, 240, 0.62);
+  /* Text drawn on top of a bright fill, where white would be unreadable. */
+  --on-bright: #0b0d11;
+}
+
+body {
+  background:
+    radial-gradient(circle at 12% 8%, rgba(90, 169, 255, .10), transparent 26%),
+    radial-gradient(circle at 88% 30%, rgba(255, 194, 71, .07), transparent 28%),
+    var(--cream);
+}
+
+::selection { color: var(--on-bright); background: var(--lime); }
+
+/* Bright fills take dark text. White on #5aa9ff is about 2.2:1. */
+.primary-action,
+.search button,
+.export-grid button,
+.secondary-action:hover,
+.local-tabs button:hover,
+.studio-nav button:hover,
+.local-tracks button:hover:not(:disabled),
+.local-tracks button.active { color: var(--on-bright); }
+
+.local-tabs button.active,
+.studio-nav button.active { color: var(--on-bright); background: var(--lime); }
+
+/* Panels and rules: near-white borders read as glare at this scale. */
+.studio-masthead { border-bottom-color: rgba(231, 234, 240, .22); }
+.local-tabs { border-color: var(--line); }
+.local-step.active { border-color: var(--green); }
+.about-body { border-color: var(--line); }
+.editor-layout { background: var(--line); border-color: var(--line); }
+.local-status { border-color: var(--line); }
+
+/* The credits block was a solid green card carrying white text. A tinted panel
+   suits a dark page better than a bright slab of colour. */
+.about-credits { color: var(--ink); background: var(--paper); border: 1px solid var(--line); }
+.about-credit dt { color: var(--muted); }
+.about-credit dd a { color: var(--green); }
+.about-credit dd a:hover { color: var(--lime); }
+.about-table th { background: rgba(90, 169, 255, .10); }
+
+/* Form controls: `background: white` under light-coloured text is invisible. */
+.control-group textarea,
+.control-group select,
+.control-group input[type="number"],
+.filter-row select { color: var(--ink); background: var(--dark); border-color: var(--line); }
+.control-group input[type="color"] { background: var(--dark); }
+
+/* Surfaces that were tinted for a cream page. */
+.empty-state { background: rgba(231, 234, 240, .04); }
+.frame-button,
+.filmstrip-frame,
+.local-frame { background: #12161d; }
+.studio-main { background: #0b0e13; }
+.editor-preview-panel { background: #0b0e13; }
+.local-tracks button { background: var(--dark); }
+.transcript-line.active { color: var(--ink); background: rgba(90, 169, 255, .16); box-shadow: inset 3px 0 var(--green); }
+
+/* Warnings were dark red on cream; on near-black they need to come forward. */
+.local-error { color: #ffd9d0; background: rgba(255, 122, 92, .14); }
+.danger-button { color: #ff9d8c; border-color: rgba(255, 122, 92, .5); }
+.danger-button:hover { color: var(--on-bright); background: #ff7a5c; border-color: #ff7a5c; }
+
+/* Search highlights: the browser default pairs a light system background with
+   inherited light text, which on a dark page is barely visible. */
+mark { padding: 0 3px; color: var(--on-bright); background: var(--lime); border-radius: 2px; }

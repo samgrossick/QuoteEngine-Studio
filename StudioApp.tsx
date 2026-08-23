@@ -20,7 +20,18 @@ export function StudioApp() {
         <div className="studio-masthead-inner">
           {/* A button, not a link: there is nowhere to navigate to. */}
           <button className="studio-brand" type="button" onClick={() => setSection("studio")}>
-            <span className="studio-mark" aria-hidden="true">QE</span>
+            {/* The same geometry as the favicon, so the tab and the page agree. */}
+            <span className="studio-mark" aria-hidden="true">
+              <svg viewBox="0 0 64 64" focusable="false">
+                <rect className="studio-mark-plate" width="64" height="64" rx="13" />
+                <g className="studio-mark-glyph" transform="translate(-2.5 0)">
+                  <circle cx="21" cy="40" r="7.5" />
+                  <path d="M17.6 34.8 27.2 15.4 33.4 18.5 23.8 37.9Z" />
+                  <circle cx="43" cy="40" r="7.5" />
+                  <path d="M39.6 34.8 49.2 15.4 55.4 18.5 45.8 37.9Z" />
+                </g>
+              </svg>
+            </span>
             <span className="studio-brand-copy">
               <strong>{studioConfig.name}</strong>
               <small>{studioConfig.tagline}</small>
@@ -45,9 +56,14 @@ export function StudioApp() {
 
       {section === "studio" ? <LocalWorkspace config={studioConfig} /> : <StudioAbout config={studioConfig} />}
 
+      {/* The rule spans the viewport while the content stays measured, which is
+          how the masthead is built. Without the wrapper the border stopped at
+          the content width and read as a broken, half-length line. */}
       <footer className="studio-footer">
-        <span>Everything happens in this tab. Nothing is uploaded, and nothing is remembered.</span>
-        <button type="button" className="text-link" onClick={() => setSection("about")}>Licences and limits</button>
+        <div className="studio-footer-inner">
+          <span>Everything happens in this tab. Nothing is uploaded, and nothing is remembered.</span>
+          <button type="button" className="text-link" onClick={() => setSection("about")}>Licences and limits</button>
+        </div>
       </footer>
     </>
   );
