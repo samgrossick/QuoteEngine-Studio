@@ -1,0 +1,21 @@
+node_modules/
+dist/
+*.log
+.DS_Store
+
+# Copied out of node_modules at build time
+/public/ffmpeg/
+
+# Never commit media, or anything derived from it
+*.mp4
+*.mkv
+*.avi
+*.mov
+*.webm
+*.srt
+*.vtt
+*.ass
+/public/testmedia/
+
+# TypeScript incremental build cache
+tsconfig.tsbuildinfo
